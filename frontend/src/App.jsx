@@ -5,7 +5,7 @@ import TransactionForm from "./components/TransactiomForm.jsx";
 import TransactionList from "./components/TransactionList.jsx";
 import "./App.css";
 
-const API = "http://localhost:5000/api/transactions";
+const API = "https://money-tracker-backend.onrender.com/api/transactions";
 
 function App() {
   const [transactions, setTransactions] = useState([]);
