@@ -1,5 +1,5 @@
 function Balance({ transactions = [] }) {
-  const { income, expense } = transactions.reduce(
+  const { income, expense, deposit } = transactions.reduce(
     (acc, item) => {
       if (item.type === "income") {
         acc.income += Number(item.amount) || 0;
@@ -7,9 +7,12 @@ function Balance({ transactions = [] }) {
         acc.expense += Number(item.amount) || 0;
       }
 
+      // Deposit Calculation
+      acc.deposit += Number(item.deposit) || 0;
+
       return acc;
     },
-    { income: 0, expense: 0 }
+    { income: 0, expense: 0, deposit: 0 }
   );
 
   const balance = income - expense;
@@ -70,6 +73,22 @@ function Balance({ transactions = [] }) {
       >
         <h2>Expense</h2>
         <h3>₹{expense}</h3>
+      </div>
+
+      {/* Deposit Box */}
+      <div
+        style={{
+          backgroundColor: "#f59e0b",
+          color: "white",
+          padding: "20px",
+          borderRadius: "12px",
+          width: "220px",
+          textAlign: "center",
+          boxShadow: "0 4px 10px rgba(0,0,0,0.2)",
+        }}
+      >
+        <h2>Deposit</h2>
+        <h3>₹{deposit}</h3>
       </div>
     </div>
   );
