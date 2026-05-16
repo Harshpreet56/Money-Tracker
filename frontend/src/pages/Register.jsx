@@ -36,7 +36,7 @@ function Register() {
 
 const submitHandler = async (e) => {
   e.preventDefault();
-
+navigate("/home");
   try {
     const res = await axios.post(
       "https://money-tracker3.onrender.com/api/auth/register",
@@ -51,7 +51,7 @@ const submitHandler = async (e) => {
 
     alert("Register Success");
 
-    navigate("/home");
+    
   } catch (error) {
     console.log(error);
 
