@@ -1,31 +1,63 @@
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate, Link } from "react-router-dom";
 
 function Register() {
+
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const submitHandler = async (e) => {
-    e.preventDefault();
+  // const submitHandler = async (e) => {
+  //   e.preventDefault();
 
-    try {
-      const res = await axios.post(
-        "https://money-tracker3.onrender.com/api/auth/register",
-        {
-          name,
-          email,
-          password,
-        }
-      );
+  //   try {
+  //     const res = await axios.post(
+  //       "https://money-tracker3.onrender.com/api/auth/register",
+  //       {
+  //         name,
+  //         email,
+  //         password,
+  //       }
+  //     );
 
-      localStorage.setItem("token", res.data.token);
+  //     localStorage.setItem("token", res.data.token);
 
-      alert("Register Success");
-    } catch (error) {
-      alert(error.response?.data?.message || "Something went wrong");
-    }
-  };
+  //     alert("Register Success");
+
+  //     // Redirect to Home Page
+  //     navigate("/home");
+  //   } catch (error) {
+  //     alert(error.response?.data?.message || "Something went wrong");
+  //   }
+  // };
+  const navigate = useNavigate();
+
+const submitHandler = async (e) => {
+  e.preventDefault();
+
+  try {
+    const res = await axios.post(
+      "https://money-tracker3.onrender.com/api/auth/register",
+      {
+        name,
+        email,
+        password,
+      }
+    );
+
+    localStorage.setItem("token", res.data.token);
+
+    alert("Register Success");
+
+    navigate("/home");
+  } catch (error) {
+    console.log(error);
+
+alert(error.response?.data?.message || "Something went wrong");
+  }
+};
 
   return (
     <div
@@ -105,7 +137,6 @@ function Register() {
               fontSize: "16px",
               fontWeight: "bold",
               cursor: "pointer",
-              transition: "0.3s",
             }}
           >
             Register
@@ -116,10 +147,10 @@ function Register() {
           style={{
             textAlign: "center",
             marginTop: "20px",
-            color: "#64748b",
           }}
         >
-          Already have an account? Login
+          Already have an account?
+          <Link to="/"> Login</Link>
         </p>
       </div>
     </div>

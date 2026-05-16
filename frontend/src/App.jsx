@@ -13,6 +13,8 @@ import "./App.css";
 
 const API = "https://money-tracker3.onrender.com/api/transactions";
 
+const token = localStorage.getItem("token");
+
 function App() {
   const [transactions, setTransactions] = useState([]);
   const [selectedDate, setSelectedDate] = useState("");
@@ -42,37 +44,39 @@ function App() {
     return item.createdAt.slice(0, 10) === selectedDate;
   });
 
-  return (
-    <Routes>
-      <Route path="/login" element={<Login />} />
+  
+ return (
+  <Routes>
+    <Route path="/" element={<Login />} />
 
-      <Route path="/" element={<Register />} />
+    <Route path="/register" element={<Register />} />
 
-      <Route
-        path="/Home"
-        element={
-          <div className="container">
-            <h1>Money Tracker</h1>
+    <Route
+      path="/home"
+      element={
+        <div className="container">
+          <h1>Money Tracker</h1>
 
-            <Balance transactions={transactions} />
+          <Balance transactions={transactions} />
 
-            <TransactionForm addTransaction={addTransaction} />
+          <TransactionForm addTransaction={addTransaction} />
 
-            <TransactionList
-              transactions={filteredTransactions}
-              deleteTransaction={deleteTransaction}
-            />
+          <TransactionList
+            transactions={filteredTransactions}
+            deleteTransaction={deleteTransaction}
+          />
 
-            <input
-              type="date"
-              value={selectedDate}
-              onChange={(e) => setSelectedDate(e.target.value)}
-            />
-          </div>
-        }
-      />
-    </Routes>
-  );
+          <input
+            type="date"
+            value={selectedDate}
+            onChange={(e) => setSelectedDate(e.target.value)}
+          />
+        </div>
+      }
+    />
+  </Routes>
+);
+ 
 }
 
 export default App;
