@@ -1,91 +1,36 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
+import Balance from "./components/Balance.jsx";
+import TransactionForm from "./components/TransactiomForm.jsx";
+import TransactionList from "./components/TransactionList.jsx";
+import "./App.css";
 
-import {
-  Routes,
-  Route,
-  Navigate,
-  useNavigate,
-} from "react-router-dom";
+const API = "https://money-tracker3.onrender.com/api/transactions";
 
-import Balance from "./components/Balance";
-import TransactionForm from "./components/TransactionForm";
-import TransactionList from "./components/TransactionList";
-
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-
-import api from "./utils/api";
-
-function Home() {
-  const navigate = useNavigate();
-
+function App() {
   const [transactions, setTransactions] = useState([]);
 
-  const token = localStorage.getItem("token");
+  const fetchTransactions = async () => {
+    const res = await axios.get(API);
+    setTransactions(res.data);
+  };
 
   useEffect(() => {
-    if (!token) {
-      navigate("/");
-    }
-
     fetchTransactions();
   }, []);
 
-  const fetchTransactions = async () => {
-    try {
-      const res = await api.get("/transactions", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      setTransactions(res.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const addTransaction = async (data) => {
-    try {
-      await api.post("/transactions", data, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      fetchTransactions();
-    } catch (error) {
-      console.log(error);
-    }
+    await axios.post(API, data);
+    fetchTransactions();
   };
-
   const deleteTransaction = async (id) => {
-    try {
-      await api.delete(`/transactions/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      fetchTransactions();
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const logoutHandler = () => {
-    localStorage.removeItem("token");
-
-    navigate("/");
+    await axios.delete(`${API}/${id}`);
+    fetchTransactions();
   };
 
   return (
-    <div>
+    <div className="container">
       <h1>Money Tracker</h1>
-
-      <button onClick={logoutHandler}>
-        Logout
-      </button>
 
       <Balance transactions={transactions} />
 
@@ -96,20 +41,6 @@ function Home() {
         deleteTransaction={deleteTransaction}
       />
     </div>
-  );
-}
-
-function App() {
-  return (
-    <Routes>
-      <Route path="/" element={<Login />} />
-
-      <Route path="/register" element={<Register />} />
-
-      <Route path="/home" element={<Home />} />
-
-      <Route path="*" element={<Navigate to="/" />} />
-    </Routes>
   );
 }
 
