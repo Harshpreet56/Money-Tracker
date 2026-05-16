@@ -1,24 +1,3 @@
-// import jwt from "jsonwebtoken";
-
-// const protect = async (req, res, next) => {
-//   try {
-//     const token = req.headers.authorization;
-
-//     if (!token) {
-//       return res.status(401).json({ message: "Not authorized" });
-//     }
-
-//     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-//     req.user = decoded;
-
-//     next();
-//   } catch (error) {
-//     res.status(401).json({ message: "Token failed" });
-//   }
-// };
-
-// export default protect;
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 
@@ -35,14 +14,14 @@ const protect = async (req, res, next) => {
 
       next();
     } catch (error) {
-      res.status(401).json({
+      return res.status(401).json({
         message: "Not authorized",
       });
     }
   }
 
   if (!token) {
-    res.status(401).json({
+    return res.status(401).json({
       message: "No token",
     });
   }

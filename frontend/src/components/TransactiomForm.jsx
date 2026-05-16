@@ -4,166 +4,83 @@ function TransactionForm({ addTransaction }) {
   const [formData, setFormData] = useState({
     title: "",
     amount: "",
+    category: "",
     type: "income",
   });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const transaction = {
-      title: formData.title.trim(),
+    await addTransaction({
+      ...formData,
       amount: Number(formData.amount),
-      type: formData.type,
-    };
-
-    await addTransaction(transaction);
+    });
 
     setFormData({
       title: "",
       amount: "",
-      type: "",
+      category: "",
+      type: "income",
     });
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="form"
-      style={{
-        maxWidth: "400px",
-        margin: "30px auto",
-        padding: "25px",
-        borderRadius: "12px",
-        backgroundColor: "#ffffff",
-        boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-        display: "flex",
-        flexDirection: "column",
-        gap: "15px",
-      }}
-    >
-      <h2
-        style={{
-          textAlign: "center",
-          color: "#333",
-          marginBottom: "10px",
-        }}
-      >
-        Add Transaction
-      </h2>
-
+    <form onSubmit={handleSubmit}>
       <input
         type="text"
-        name="title"
-        placeholder="Enter Title"
-        value={formData.title}
-        onChange={handleChange}
+        placeholder="Title"
         required
-        style={inputStyle}
+        value={formData.title}
+        onChange={(e) =>
+          setFormData({
+            ...formData,
+            title: e.target.value,
+          })
+        }
       />
 
       <input
         type="number"
-        name="amount"
-        placeholder="Enter Amount"
-        value={formData.amount}
-        onChange={handleChange}
+        placeholder="Amount"
         required
-        style={inputStyle}
+        value={formData.amount}
+        onChange={(e) =>
+          setFormData({
+            ...formData,
+            amount: e.target.value,
+          })
+        }
       />
 
- 
+      <input
+        type="text"
+        placeholder="Category"
+        value={formData.category}
+        onChange={(e) =>
+          setFormData({
+            ...formData,
+            category: e.target.value,
+          })
+        }
+      />
 
-      {/* Type Buttons */}
-      <div
-        style={{
-          display: "flex",
-          gap: "10px",
-          justifyContent: "center",
-        }}
+      <select
+        value={formData.type}
+        onChange={(e) =>
+          setFormData({
+            ...formData,
+            type: e.target.value,
+          })
+        }
       >
-        <button
-          type="button"
-          onClick={() => setFormData({ ...formData, type: "income" })}
-          style={{
-            ...typeButton,
-            backgroundColor:
-              formData.type === "income" ? "#16a34a" : "#d1d5db",
-            color: formData.type === "income" ? "#fff" : "#000",
-          }}
-        >
-          Income
-        </button>
+        <option value="income">Income</option>
+        <option value="expense">Expense</option>
+        <option value="deposit">Deposit</option>
+      </select>
 
-        <button
-          type="button"
-          onClick={() => setFormData({ ...formData, type: "deposit" })}
-          style={{
-            ...typeButton,
-            backgroundColor:
-              formData.type === "deposit" ? "#f59e0b" : "#d1d5db",
-            color: formData.type === "deposit" ? "#fff" : "#000",
-          }}
-        >
-          Deposit
-        </button>
-
-        <button
-          type="button"
-          onClick={() => setFormData({ ...formData, type: "expense" })}
-          style={{
-            ...typeButton,
-            backgroundColor:
-              formData.type === "expense" ? "#dc2626" : "#d1d5db",
-            color: formData.type === "expense" ? "#fff" : "#000",
-          }}
-        >
-          Expense
-        </button>
-      </div>
-
-      <button
-        type="submit"
-        style={{
-          padding: "12px",
-          border: "none",
-          borderRadius: "8px",
-          backgroundColor: "#2563eb",
-          color: "#fff",
-          fontSize: "16px",
-          cursor: "pointer",
-          transition: "0.3s",
-        }}
-      >
-        Add Transaction
-      </button>
+      <button type="submit">Add Transaction</button>
     </form>
   );
 }
-
-const inputStyle = {
-  padding: "12px",
-  borderRadius: "8px",
-  border: "1px solid #ccc",
-  fontSize: "15px",
-  outline: "none",
-};
-
-const typeButton = {
-  padding: "10px 15px",
-  border: "none",
-  borderRadius: "8px",
-  cursor: "pointer",
-  fontSize: "14px",
-  fontWeight: "bold",
-};
 
 export default TransactionForm;

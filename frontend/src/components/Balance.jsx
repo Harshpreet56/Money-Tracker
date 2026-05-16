@@ -2,91 +2,46 @@ function Balance({ transactions = [] }) {
   const { income, expense, deposit } = transactions.reduce(
     (acc, item) => {
       if (item.type === "income") {
-        acc.income += Number(item.amount) || 0;
-      } else if (item.type === "expense") {
-        acc.expense += Number(item.amount) || 0;
+        acc.income += Number(item.amount);
       }
 
-      // Deposit Calculation
-      acc.deposit += Number(item.deposit) || 0;
+      if (item.type === "expense") {
+        acc.expense += Number(item.amount);
+      }
+
+      if (item.type === "deposit") {
+        acc.deposit += Number(item.amount);
+      }
 
       return acc;
     },
-    { income: 0, expense: 0, deposit: 0 }
+    {
+      income: 0,
+      expense: 0,
+      deposit: 0,
+    }
   );
 
-  const balance = income - expense;
+  const balance = income + deposit - expense;
 
   return (
-    <div
-      style={{
-        display: "flex",
-        gap: "20px",
-        justifyContent: "center",
-        flexWrap: "wrap",
-        marginTop: "20px",
-      }}
-    >
-      {/* Balance Box */}
-      <div
-        style={{
-          backgroundColor: "#4f46e5",
-          color: "white",
-          padding: "20px",
-          borderRadius: "12px",
-          width: "220px",
-          textAlign: "center",
-          boxShadow: "0 4px 10px rgba(0,0,0,0.2)",
-        }}
-      >
+    <div className="balance-container">
+      <div className="card">
         <h2>Balance</h2>
         <h3>₹{balance}</h3>
       </div>
 
-      {/* Income Box */}
-      <div
-        style={{
-          backgroundColor: "#16a34a",
-          color: "white",
-          padding: "20px",
-          borderRadius: "12px",
-          width: "220px",
-          textAlign: "center",
-          boxShadow: "0 4px 10px rgba(0,0,0,0.2)",
-        }}
-      >
+      <div className="card income">
         <h2>Income</h2>
         <h3>₹{income}</h3>
       </div>
 
-      {/* Expense Box */}
-      <div
-        style={{
-          backgroundColor: "#dc2626",
-          color: "white",
-          padding: "20px",
-          borderRadius: "12px",
-          width: "220px",
-          textAlign: "center",
-          boxShadow: "0 4px 10px rgba(0,0,0,0.2)",
-        }}
-      >
+      <div className="card expense">
         <h2>Expense</h2>
         <h3>₹{expense}</h3>
       </div>
 
-      {/* Deposit Box */}
-      <div
-        style={{
-          backgroundColor: "#f59e0b",
-          color: "white",
-          padding: "20px",
-          borderRadius: "12px",
-          width: "220px",
-          textAlign: "center",
-          boxShadow: "0 4px 10px rgba(0,0,0,0.2)",
-        }}
-      >
+      <div className="card deposit">
         <h2>Deposit</h2>
         <h3>₹{deposit}</h3>
       </div>
