@@ -1,67 +1,41 @@
 import express from "express";
-import Transaction from "../models/transaction.js";
-import protect from "../middleware/authMiddleware.js";
+import Transaction from "../models/Transaction.js";
+import authMiddleware from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-router.get("/", protect, async (req, res) => {
+router.post("/add", authMiddleware, async (req, res) => {
+  try {
+    const transaction = await Transaction.create({
+      ...req.body,
+      user: req.user.id,
+    });
+
+    res.json(transaction);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+router.get("/my", authMiddleware, async (req, res) => {
   try {
     const transactions = await Transaction.find({
-      user: req.user._id,
-    }).sort({
-      createdAt: -1,
-    });
+      user: req.user.id,
+    }).sort({ createdAt: -1 });
 
     res.json(transactions);
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
+    res.status(500).json({ message: error.message });
   }
 });
 
-router.post("/", protect, async (req, res) => {
+router.delete("/:id", authMiddleware, async (req, res) => {
   try {
-    const { title, amount, type, category } = req.body;
+    await Transaction.findByIdAndDelete(req.params.id);
 
-    const transaction = await Transaction.create({
-      title,
-      amount,
-      type,
-      category,
-      user: req.user._id,
-    });
-
-    res.status(201).json(transaction);
+    res.json({ message: "Deleted" });
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-});
-
-router.delete("/:id", protect, async (req, res) => {
-  try {
-    const transaction = await Transaction.findOne({
-      _id: req.params.id,
-      user: req.user._id,
-    });
-
-    if (!transaction) {
-      return res.status(404).json({
-        message: "Transaction not found",
-      });
-    }
-
-    await transaction.deleteOne();
-
-    res.json({
-      message: "Transaction deleted",
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
+    res.status(500).json({ message: error.message });
   }
 });
 
